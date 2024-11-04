@@ -46,7 +46,6 @@ function init() {
 
   // create controls for the GUI
   const gui = new GUI();
-  // gui.add(controls, 'scaleX', 0, 5);
 
   const textureLoader = new THREE.TextureLoader();
   const matcapTexture = textureLoader.load("/textures/matcaps/8.png");
@@ -56,7 +55,16 @@ function init() {
     matcap: matcapTexture,
     flatShading: false,
   });
-
+  const donutMaterial = new THREE.MeshPhysicalMaterial({
+    transparent: true,
+    opacity: 1,
+    roughness: 0.58,
+    metalness: 0,
+    reflectivity: 0.4,
+    transmission: 1,
+    ior: 2.33,
+    thickness: 0.01,
+  });
   const group = new THREE.Group();
 
   const fontLoader = new FontLoader(loadingManager);
@@ -64,53 +72,20 @@ function init() {
     const textGeometry = new TextGeometry("I love three.js", {
       font: font,
       size: 3,
-      depth: 0.5,
+      depth: 1,
       curveSegments: 4,
-      bevelEnabled: true,
-      bevelSegments: 5,
-      bevelSize: 0.02,
-      bevelThickness: 0.03,
-      bevelOffset: 0,
     });
-    // textGeometry.computeBoundingBox();
-    // textGeometry.translate(
-    //   -(textGeometry.boundingBox.max.x + textGeometry.boundingBox.min.x) / 2,
-    //   -(textGeometry.boundingBox.max.y + textGeometry.boundingBox.min.y) / 2,
-    //   -(textGeometry.boundingBox.max.z + textGeometry.boundingBox.min.z) / 2
-    // );
-    // textGeometry.computeBoundingBox();
-    // console.log(textGeometry.boundingBox);
     textGeometry.center();
 
-    const text = new THREE.Mesh(textGeometry, material);
+    const text = new THREE.Mesh(textGeometry, donutMaterial);
     text.lookAt(camera.position);
     scene.add(text);
 
     // donuts
-    const donutGeometry = new THREE.IcosahedronGeometry(0.5, 1);
-    const donutMaterial = new THREE.MeshPhysicalMaterial({
-      transparent: true,
-      opacity: 1,
-      roughness: 0.3,
-      metalness: 0.07,
-      reflectivity: 0.8,
-      transmission: 1,
-      ior: 1.33,
-      thickness: 0.3,
-    });
+    const donutGeometry = new THREE.SphereGeometry(0.5, 20, 20);
 
-    // Add GUI controls for material properties
-    const materialFolder = gui.addFolder("Donut Material");
-    materialFolder.add(donutMaterial, "opacity", 0, 1);
-    materialFolder.add(donutMaterial, "roughness", 0, 1);
-    materialFolder.add(donutMaterial, "metalness", 0, 1);
-    materialFolder.add(donutMaterial, "reflectivity", 0, 1);
-    materialFolder.add(donutMaterial, "transmission", 0, 1);
-    materialFolder.add(donutMaterial, "ior", 1, 2.333);
-    materialFolder.add(donutMaterial, "thickness", 0, 1);
-
-    Array.from({ length: 800 }).forEach(() => {
-      const donut = new THREE.Mesh(donutGeometry, donutMaterial);
+    Array.from({ length: 350 }).forEach(() => {
+      const donut = new THREE.Mesh(donutGeometry, material);
       donut.position.set(
         (Math.random() - 0.5) * 30,
         (Math.random() - 0.5) * 30,
@@ -123,20 +98,6 @@ function init() {
     });
     scene.add(group);
   });
-
-  scene.add(new THREE.AmbientLight(0.5));
-
-  const rgbeLoader = new RGBELoader(loadingManager);
-  rgbeLoader.load(
-    "/textures/environmentMap/moonless_golf_4k.hdr",
-    (texture) => {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-
-      // Set the scene background to the cube texture
-      scene.background = texture;
-      scene.environment = texture;
-    }
-  );
 
   // add the output of the render function to the HTML
   document.body.appendChild(renderer.domElement);
