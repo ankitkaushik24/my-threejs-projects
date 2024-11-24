@@ -3,7 +3,7 @@ import GUI from "lil-gui";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 
-function init() {
+export default function init() {
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   const scene = new THREE.Scene();
 
@@ -20,7 +20,10 @@ function init() {
     width: window.innerWidth,
     height: window.innerHeight,
   };
-  const renderer = new THREE.WebGLRenderer();
+  const renderer = new THREE.WebGLRenderer({
+    antialias: false,
+    canvas: document.querySelector("#webgl"),
+  });
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -128,7 +131,9 @@ function init() {
   scene.add(group); // Add the group to the scene
 
   // create the GUI
-  const gui = new GUI();
+  const gui = new GUI({
+    container: document.querySelector("#gui"),
+  });
   gui.add(material, "metalness", 0, 1);
   gui.add(material, "roughness", 0, 1);
   gui.add(material, "opacity", 0, 1);
@@ -149,9 +154,6 @@ function init() {
   //   const spotLight = new THREE.SpotLight(0xffffff, 5);
   //   spotLight.position.set(0, 10, 0);
   //   scene.add(spotLight);
-
-  // add the output of the render function to the HTML
-  document.body.appendChild(renderer.domElement);
 
   const clock = new THREE.Clock();
 
@@ -184,4 +186,3 @@ function init() {
 
   tick();
 }
-init();

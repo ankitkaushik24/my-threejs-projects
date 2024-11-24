@@ -3,7 +3,7 @@ import GUI from "lil-gui";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"; // Import OrbitControls
 import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
-function init() {
+export default function init() {
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   const scene = new THREE.Scene();
 
@@ -23,14 +23,12 @@ function init() {
     width: window.innerWidth,
     height: window.innerHeight,
   };
-  const renderer = new THREE.WebGLRenderer({ antialias: false });
+  const canvas = document.querySelector("#webgl");
+  const renderer = new THREE.WebGLRenderer({ antialias: false, canvas });
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   //   renderer.shadowMap.enabled = true;
   //   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-  // add the output of the render function to the HTML
-  document.body.appendChild(renderer.domElement);
 
   const lightIntensities = {
     ambientLight: 0.5,
@@ -126,13 +124,13 @@ function init() {
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
     const sphereMaterial = new THREE.MeshBasicMaterial();
     const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphereMesh.position.set(0, 1, 0); // Position the sphere
+    sphereMesh.position.set(0, 2, 0); // Position the sphere
     return sphereMesh;
   })();
   sphere.castShadow = true;
 
   // Create a plane
-  const plane = (() => {
+  const [plane, shadowPlane] = (() => {
     const object3d = new THREE.Object3D();
     const planeGeometry = new THREE.PlaneGeometry(5, 5, 16, 16);
     const planeMaterial = new THREE.MeshBasicMaterial({
@@ -140,7 +138,8 @@ function init() {
       //   side: THREE.DoubleSide,
     });
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-    object3d.add(planeMesh);
+    planeMesh.rotation.x = -Math.PI / 2;
+    scene.add(planeMesh);
 
     const shadowPlane = new THREE.Mesh(
       planeGeometry,
@@ -150,12 +149,13 @@ function init() {
         transparent: true,
       })
     );
-    shadowPlane.position.y = planeMesh.position.y + 0.01;
-    object3d.add(shadowPlane);
+    shadowPlane.position.y = planeMesh.position.z + 0.1;
+    shadowPlane.rotation.x = -Math.PI / 2;
+    scene.add(shadowPlane);
 
     object3d.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
 
-    return object3d;
+    return [object3d, shadowPlane];
   })();
   //   plane.castShadow = true;
   plane.receiveShadow = true;
@@ -182,7 +182,9 @@ function init() {
   };
 
   // Setup GUI
-  const gui = new GUI();
+  const gui = new GUI({
+    container: document.querySelector("#gui"),
+  });
 
   // Lights folder
   const lightsFolder = gui.addFolder("Lights");
@@ -273,6 +275,8 @@ function init() {
   // Create OrbitControls
   const orbitControls = new OrbitControls(camera, renderer.domElement);
 
+  const clock = new THREE.Clock();
+
   // function for re-rendering/animating the scene
   function tick() {
     requestAnimationFrame(tick);
@@ -280,9 +284,17 @@ function init() {
     // Update only active helpers
     activeHelpers.forEach((helper) => helper.update());
 
+    const elapsedTime = clock.getElapsedTime();
+    sphere.position.x = Math.sin(elapsedTime) * 1.2;
+    sphere.position.z = Math.cos(elapsedTime) * 1.2;
+    shadowPlane.position.x = sphere.position.x;
+    shadowPlane.position.z = sphere.position.z;
+
+    sphere.position.y = Math.abs(Math.sin(elapsedTime * 2));
+    shadowPlane.material.opacity = 1 - sphere.position.y;
+
     orbitControls.update(); // Update the controls
     renderer.render(scene, camera);
   }
   tick();
 }
-init();

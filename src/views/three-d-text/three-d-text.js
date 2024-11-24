@@ -16,7 +16,10 @@ function initCore() {
   );
   camera.position.set(-25, 0, 15);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    canvas: document.querySelector("#webgl"),
+  });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -28,7 +31,9 @@ function initControls(camera, renderer) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  const gui = new GUI();
+  const gui = new GUI({
+    container: document.querySelector("#gui"),
+  });
   return { controls, gui };
 }
 
@@ -245,7 +250,7 @@ function handleResize(camera, renderer) {
 }
 
 // Main initialization function
-function init() {
+export default function init() {
   const { scene, camera, renderer } = initCore();
   const { controls, gui } = initControls(camera, renderer);
   const { matcapMaterial, physicalMaterial } = initMaterials(gui);
@@ -273,8 +278,5 @@ function init() {
     tick();
   });
 
-  document.body.appendChild(renderer.domElement);
   handleResize(camera, renderer);
 }
-
-init();

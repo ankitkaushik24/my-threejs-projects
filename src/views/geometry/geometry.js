@@ -5,9 +5,12 @@ import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import GUI from "lil-gui";
 
-function init() {
-  const renderer = new THREE.WebGLRenderer();
+export default function init() {
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector("#webgl"),
+  });
   const gui = new GUI({
+    container: document.querySelector("#gui"),
     width: 300,
     title: "Debug UI",
     closeFolders: true,
@@ -228,8 +231,6 @@ function init() {
 
   scene.add(group, new THREE.AmbientLight(0xffffff, 1));
 
-  document.body.appendChild(renderer.domElement);
-
   // gsap.to(group.position, {
   //   duration: 1,
   //   delay: 1,
@@ -277,5 +278,3 @@ function init() {
   }
   tick();
 }
-
-init();
