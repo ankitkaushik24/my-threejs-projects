@@ -154,6 +154,7 @@ export default function init() {
   };
 
   const renderer = new THREE.WebGLRenderer({
+    antialias: true,
     canvas: document.querySelector("#webgl"),
   });
 
