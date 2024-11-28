@@ -1,8 +1,7 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import GUI from "lil-gui";
 import { Timer } from "three/addons/misc/Timer.js";
 import { Sky } from "three/examples/jsm/Addons.js";
+import { coreInit } from "../../utils";
 
 const getFloorTextures = (textureLoader) => {
   const floorColor = textureLoader.load(
@@ -144,48 +143,11 @@ const getGraveTextures = (textureLoader) => {
 };
 
 export default function init() {
-  const gui = new GUI({
-    container: document.querySelector("#gui"),
-  });
+  const { gui, sizes, renderer, scene, camera, orbitControls } = coreInit();
 
-  const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-
-  const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    canvas: document.querySelector("#webgl"),
-  });
-
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  const scene = new THREE.Scene();
-
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    sizes.width / sizes.height,
-    0.1,
-    100
-  );
   camera.position.set(4, 2, 5);
 
-  const orbitControls = new OrbitControls(camera, renderer.domElement);
-  orbitControls.enableDamping = true;
-
   scene.add(camera);
-
-  window.addEventListener("resize", () => {
-    sizes.width = window.innerWidth;
-    sizes.height = window.innerHeight;
-
-    camera.aspect = sizes.width / sizes.height;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  });
 
   /**
    * Lights
