@@ -32,7 +32,7 @@ export function coreInit() {
   const orbitControls = new OrbitControls(camera, renderer.domElement);
   orbitControls.enableDamping = true;
 
-  window.addEventListener("resize", () => {
+  const onResize = () => {
     sizes.width = window.innerWidth;
     sizes.height = window.innerHeight;
 
@@ -41,7 +41,13 @@ export function coreInit() {
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  });
+  };
 
-  return { gui, renderer, scene, camera, orbitControls };
+  window.addEventListener("resize", onResize);
+
+  const removeListeners = () => {
+    window.removeEventListener("resize", onResize);
+  };
+
+  return { gui, renderer, scene, camera, orbitControls, removeListeners };
 }

@@ -1,41 +1,6 @@
 import * as THREE from "three";
-import GUI from "lil-gui";
 import { FontLoader } from "three/examples/jsm/Addons.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
-
-// Initialize core components
-function initCore() {
-  const scene = new THREE.Scene();
-
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    100
-  );
-  camera.position.set(-25, 0, 15);
-
-  const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    canvas: document.querySelector("#webgl"),
-  });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  return { scene, camera, renderer };
-}
-
-// Initialize controls and GUI
-function initControls(camera, renderer) {
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-
-  const gui = new GUI({
-    container: document.querySelector("#gui"),
-  });
-  return { controls, gui };
-}
 
 // Initialize materials
 function initMaterials(gui) {
@@ -209,7 +174,7 @@ function createObjects(
     })
     .name("Text Content");
 
-  return { group };
+  return { group, textGeometry, donutGeometry };
 }
 
 // Animation loop
@@ -217,7 +182,7 @@ function createAnimationLoop({
   scene,
   camera,
   renderer,
-  controls,
+  orbitControls,
   group,
   gui,
 }) {
@@ -231,7 +196,7 @@ function createAnimationLoop({
       (group.rotation.y + options.rotationSpeed) % (2 * Math.PI);
     group.position.y = Math.sin(elapsedTime * 2) * 0.5;
 
-    controls.update();
+    orbitControls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
@@ -239,27 +204,17 @@ function createAnimationLoop({
   return tick;
 }
 
-// Handle window resize
-function handleResize(camera, renderer) {
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  });
-}
-
 // Main initialization function
-export default function init() {
-  const { scene, camera, renderer } = initCore();
-  const { controls, gui } = initControls(camera, renderer);
+export default function init({ scene, camera, renderer, gui, orbitControls }) {
+  camera.position.set(-25, 0, 15);
   const { matcapMaterial, physicalMaterial } = initMaterials(gui);
 
   initLighting(scene, gui);
 
   const fontLoader = new FontLoader();
+  const geometries = [];
   fontLoader.load("/fonts/Devinne_Swash_Regular.json", (font) => {
-    const { group } = createObjects(
+    const { group, textGeometry, donutGeometry } = createObjects(
       scene,
       font,
       matcapMaterial,
@@ -267,16 +222,21 @@ export default function init() {
       gui,
       camera
     );
+    geometries.push(textGeometry, donutGeometry);
     const tick = createAnimationLoop({
       scene,
       camera,
       renderer,
-      controls,
+      orbitControls,
       group,
       gui,
     });
     tick();
   });
 
-  handleResize(camera, renderer);
+  return () => {
+    matcapMaterial.dispose();
+    physicalMaterial.dispose();
+    geometries.forEach((geometry) => geometry.dispose());
+  };
 }

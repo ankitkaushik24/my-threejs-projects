@@ -1,15 +1,15 @@
-import { coreInit } from "../../utils";
 import * as THREE from "three";
 import { Timer } from "three/addons/misc/Timer.js";
 
-export default function init() {
-  const { scene, camera, renderer, gui, orbitControls } = coreInit();
+export default function init({ scene, camera, renderer, gui, orbitControls }) {
+  const textureLoader = new THREE.TextureLoader();
+  const starTexture = textureLoader.load("/textures/particles/star_05.png");
 
   camera.position.set(3, 3, 3);
 
   const parameters = {
     count: 100000,
-    size: 0.01,
+    size: 0.05,
     branches: 4,
     radius: 5,
     spin: 1.4,
@@ -68,6 +68,8 @@ export default function init() {
 
     // material
     material = new THREE.PointsMaterial({
+      alphaMap: starTexture,
+      transparent: true,
       size: parameters.size,
       sizeAttenuation: true,
       blending: THREE.AdditiveBlending,
@@ -138,4 +140,12 @@ export default function init() {
   };
 
   tick();
+
+  return () => {
+    if (points) {
+      geometry.dispose();
+      material.dispose();
+      scene.remove(points);
+    }
+  };
 }

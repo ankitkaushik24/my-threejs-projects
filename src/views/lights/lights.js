@@ -1,34 +1,11 @@
 import * as THREE from "three";
-import GUI from "lil-gui";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"; // Import OrbitControls
 import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
-export default function init() {
-  // create a scene, that will hold all our elements such as objects, cameras and lights.
-  const scene = new THREE.Scene();
+export default function init({ scene, camera, renderer, gui, orbitControls }) {
+  camera.position.set(1, 1, 10);
 
   const textureLoader = new THREE.TextureLoader();
   const shadowTexture = textureLoader.load("/textures/simpleShadow.jpg");
-
-  // create a camera, which defines where we're looking at
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    100
-  );
-  // tell the camera where to look
-  camera.position.set(1, 1, 10);
-  const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-  const canvas = document.querySelector("#webgl");
-  const renderer = new THREE.WebGLRenderer({ antialias: false, canvas });
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  //   renderer.shadowMap.enabled = true;
-  //   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const lightIntensities = {
     ambientLight: 0.5,
@@ -181,11 +158,6 @@ export default function init() {
     spotLight: new THREE.SpotLightHelper(lights.spotLight),
   };
 
-  // Setup GUI
-  const gui = new GUI({
-    container: document.querySelector("#gui"),
-  });
-
   // Lights folder
   const lightsFolder = gui.addFolder("Lights");
 
@@ -272,9 +244,6 @@ export default function init() {
 
   lightsFolder.open();
 
-  // Create OrbitControls
-  const orbitControls = new OrbitControls(camera, renderer.domElement);
-
   const clock = new THREE.Clock();
 
   // function for re-rendering/animating the scene
@@ -297,4 +266,13 @@ export default function init() {
     renderer.render(scene, camera);
   }
   tick();
+
+  return () => {
+    // Cleanup geometries and materials
+    sphere.geometry.dispose();
+    sphere.material.dispose();
+    plane.geometry.dispose();
+    plane.material.dispose();
+    scene.remove(sphere, plane, ambientLight, pointLight);
+  };
 }

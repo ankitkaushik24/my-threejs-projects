@@ -142,12 +142,8 @@ const getGraveTextures = (textureLoader) => {
   };
 };
 
-export default function init() {
-  const { gui, sizes, renderer, scene, camera, orbitControls } = coreInit();
-
+export default function init({ scene, camera, renderer, gui, orbitControls }) {
   camera.position.set(4, 2, 5);
-
-  scene.add(camera);
 
   /**
    * Lights
@@ -472,4 +468,12 @@ export default function init() {
   };
 
   tick();
+
+  return () => {
+    // Cleanup textures and geometries
+    [floorColor, floorArm, floorNormal, floorAlpha, floorDisplacement].forEach(
+      (texture) => texture.dispose()
+    );
+    // Add other cleanup code here
+  };
 }

@@ -1,16 +1,14 @@
 import * as THREE from "three";
 import { Timer } from "three/addons/misc/Timer.js";
-import { coreInit } from "../../utils";
 
-export default function init() {
-  const { gui, sizes, renderer, scene, camera, orbitControls } = coreInit();
-  const textureLoader = new THREE.TextureLoader();
-
+export default function init({ scene, camera, renderer, gui, orbitControls }) {
   camera.position.set(0, 0, 4);
 
+  const textureLoader = new THREE.TextureLoader();
   const particleTexture = textureLoader.load(
     "/textures/particles/circle_02.png"
   );
+
   const count = 20000;
 
   //   const particlesGeometry = new THREE.SphereGeometry(1, 16, 16);
@@ -121,4 +119,11 @@ export default function init() {
   };
 
   tick();
+
+  return () => {
+    particlesGeometry.dispose();
+    particlesMaterial.dispose();
+    particleTexture.dispose();
+    scene.remove(particles);
+  };
 }

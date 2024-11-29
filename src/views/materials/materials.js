@@ -1,37 +1,9 @@
 import * as THREE from "three";
-import GUI from "lil-gui";
-import { OrbitControls } from "three/addons/controls/OrbitControls";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 
-export default function init() {
-  // create a scene, that will hold all our elements such as objects, cameras and lights.
-  const scene = new THREE.Scene();
-
-  // create a camera, which defines where we're looking at
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    100
-  );
-  // tell the camera where to look
+export default function init({ scene, camera, renderer, gui, orbitControls }) {
   camera.position.set(0, 0, 10);
-  const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-  const renderer = new THREE.WebGLRenderer({
-    antialias: false,
-    canvas: document.querySelector("#webgl"),
-  });
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  const orbitControls = new OrbitControls(camera, renderer.domElement);
-
-  /**
-   * Textures
-   */
   const textureLoader = new THREE.TextureLoader();
   const doorColor = textureLoader.load("/textures/door/color.jpg");
   const doorAlpha = textureLoader.load("/textures/door/alpha.jpg");
@@ -130,10 +102,6 @@ export default function init() {
   group.add(sphere, plane, torus); // Add objects to the group
   scene.add(group); // Add the group to the scene
 
-  // create the GUI
-  const gui = new GUI({
-    container: document.querySelector("#gui"),
-  });
   gui.add(material, "metalness", 0, 1);
   gui.add(material, "roughness", 0, 1);
   gui.add(material, "opacity", 0, 1);
@@ -171,7 +139,7 @@ export default function init() {
     // torus.rotation.x = elapsedTime * 0.2;
     // torus.rotation.y = elapsedTime * 0.5;
 
-    // orbitControls.update();
+    orbitControls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
@@ -185,4 +153,18 @@ export default function init() {
   });
 
   tick();
+
+  return () => {
+    // Cleanup textures
+    [
+      doorColor,
+      doorAlpha,
+      doorHeight,
+      doorNormal,
+      doorAmbientOcclusion,
+    ].forEach((texture) => texture.dispose());
+    // Add other cleanup code here
+
+    material.dispose();
+  };
 }
