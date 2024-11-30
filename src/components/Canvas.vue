@@ -20,10 +20,10 @@ onMounted(() => {
     cleanup?.();
     removeListeners?.();
     orbitControls.dispose();
+    scene.clear();
     gui.destroy();
+    renderer.setRenderTarget(null);
     renderer.dispose();
-    scene.dispose();
-    camera.dispose();
   };
 });
 

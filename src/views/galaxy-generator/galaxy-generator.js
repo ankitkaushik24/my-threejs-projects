@@ -27,7 +27,6 @@ export default function init({ scene, camera, renderer, gui, orbitControls }) {
     if (points !== null) {
       geometry.dispose();
       material.dispose();
-      scene.remove(points);
     }
     const insideColor = new THREE.Color(parameters.insideColor);
     const outsideColor = new THREE.Color(parameters.outsideColor);
@@ -145,7 +144,6 @@ export default function init({ scene, camera, renderer, gui, orbitControls }) {
     if (points) {
       geometry.dispose();
       material.dispose();
-      scene.remove(points);
     }
   };
 }

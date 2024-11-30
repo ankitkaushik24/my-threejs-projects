@@ -124,6 +124,5 @@ export default function init({ scene, camera, renderer, gui, orbitControls }) {
     particlesGeometry.dispose();
     particlesMaterial.dispose();
     particleTexture.dispose();
-    scene.remove(particles);
   };
 }
