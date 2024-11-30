@@ -1,6 +1,6 @@
 <script setup>
 import Canvas from "../../components/Canvas.vue";
-import init from "./particles.js";
+import init from "./particlesv2.js";
 </script>
 
 <template>
