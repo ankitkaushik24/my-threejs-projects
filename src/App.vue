@@ -12,7 +12,7 @@ import NavMenu from "./components/NavMenu.vue";
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: "sans-serif";
 }
 * {
   box-sizing: border-box;

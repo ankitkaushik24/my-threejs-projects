@@ -25,7 +25,6 @@ import init from "./scroll-animation";
 }
 html body {
   margin: 0;
-  font-family: fantasy, "Poppins", sans-serif;
   background-color: var(--background);
   overflow: auto;
   height: 100vh;
@@ -59,7 +58,8 @@ section:nth-child(even) {
 }
 section h3 {
   text-transform: uppercase;
-  font-size: 15vw;
+  font-size: 12vw;
+  letter-spacing: 1.5vw;
   font-weight: 700;
   color: var(--foreground);
 }
