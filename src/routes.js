@@ -5,6 +5,7 @@ import Lights from "./views/lights/Lights.vue";
 import Geometry from "./views/geometry/Geometry.vue";
 import Particles from "./views/particles/Particles.vue";
 import GalaxyGenerator from "./views/galaxy-generator/GalaxyGenerator.vue";
+import ScrollAnimation from "./views/scroll-animation/ScrollAnimation.vue";
 
 export default [
   { path: "/", title: "Home", redirect: "/haunted-house" },
@@ -18,5 +19,10 @@ export default [
     path: "/galaxy-generator",
     title: "Galaxy Generator",
     component: GalaxyGenerator,
+  },
+  {
+    path: "/scroll-animation",
+    title: "Scroll Animation",
+    component: ScrollAnimation,
   },
 ];

@@ -9,17 +9,21 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  coreOptions: {
+    type: Object,
+    default: {},
+  },
 });
 
 onMounted(() => {
-  const { scene, camera, renderer, gui, orbitControls, removeListeners } =
-    coreInit();
-  const cleanup = props.init({ scene, camera, renderer, gui, orbitControls });
+  const core = coreInit(props.coreOptions);
+  const cleanup = props.init(core);
 
   destroy = () => {
+    const { scene, renderer, gui, orbitControls, removeListeners } = core;
     cleanup?.();
     removeListeners?.();
-    orbitControls.dispose();
+    orbitControls?.dispose();
     scene.clear();
     gui.destroy();
     renderer.setRenderTarget(null);
@@ -33,8 +37,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <canvas id="webgl"></canvas>
-  <div id="gui"></div>
+  <div>
+    <canvas id="webgl"></canvas>
+    <div id="gui"></div>
+  </div>
 </template>
 
 <style scoped>

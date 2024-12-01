@@ -2,7 +2,12 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import GUI from "lil-gui";
 
-export function coreInit() {
+export function coreInit(options = {}) {
+  const defaultOptions = {
+    enableOrbitControls: true,
+  };
+  options = { ...defaultOptions, ...options };
+
   const gui = new GUI({
     container: document.querySelector("#gui"),
   });
@@ -29,8 +34,12 @@ export function coreInit() {
     1000
   );
 
-  const orbitControls = new OrbitControls(camera, renderer.domElement);
-  orbitControls.enableDamping = true;
+  let orbitControls;
+
+  if (options.enableOrbitControls) {
+    orbitControls = new OrbitControls(camera, renderer.domElement);
+    orbitControls.enableDamping = true;
+  }
 
   const onResize = () => {
     sizes.width = window.innerWidth;
@@ -49,5 +58,13 @@ export function coreInit() {
     window.removeEventListener("resize", onResize);
   };
 
-  return { gui, renderer, scene, camera, orbitControls, removeListeners };
+  return {
+    gui,
+    renderer,
+    scene,
+    sizes,
+    camera,
+    orbitControls,
+    removeListeners,
+  };
 }

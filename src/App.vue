@@ -5,9 +5,7 @@ import NavMenu from "./components/NavMenu.vue";
 
 <template>
   <NavMenu />
-  <main>
-    <RouterView />
-  </main>
+  <RouterView />
 </template>
 
 <style>
@@ -16,7 +14,7 @@ body {
   padding: 0;
   font-family: Arial, sans-serif;
 }
-
-main {
+* {
+  box-sizing: border-box;
 }
 </style>
