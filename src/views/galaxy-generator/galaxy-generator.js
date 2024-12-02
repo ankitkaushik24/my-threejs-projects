@@ -4,6 +4,15 @@ import { Timer } from "three/addons/misc/Timer.js";
 export default function init({ scene, camera, renderer, gui, orbitControls }) {
   const textureLoader = new THREE.TextureLoader();
   const starTexture = textureLoader.load("/textures/particles/star_05.png");
+  const cubeTextureLoader = new THREE.CubeTextureLoader();
+  scene.background = cubeTextureLoader.load([
+    "/textures/stars.jpg",
+    "/textures/stars.jpg",
+    "/textures/stars.jpg",
+    "/textures/stars.jpg",
+    "/textures/stars.jpg",
+    "/textures/stars.jpg",
+  ]);
 
   camera.position.set(3, 3, 3);
 
