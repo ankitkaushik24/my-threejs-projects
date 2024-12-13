@@ -4,6 +4,7 @@ import GUI from "lil-gui";
 
 export function coreInit(options = {}) {
   const defaultOptions = {
+    cameraFar: 1000,
     enableOrbitControls: true,
   };
   options = { ...defaultOptions, ...options };
@@ -31,7 +32,7 @@ export function coreInit(options = {}) {
     75,
     sizes.width / sizes.height,
     0.1,
-    1000
+    options.cameraFar
   );
 
   let orbitControls;

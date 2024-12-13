@@ -6,6 +6,7 @@ import Geometry from "./views/geometry/Geometry.vue";
 import Particles from "./views/particles/Particles.vue";
 import GalaxyGenerator from "./views/galaxy-generator/GalaxyGenerator.vue";
 import ScrollAnimation from "./views/scroll-animation/ScrollAnimation.vue";
+import Physics from "./views/physics/Physics.vue";
 
 export default [
   { path: "/", title: "Home", redirect: "/haunted-house" },
@@ -24,5 +25,10 @@ export default [
     path: "/scroll-animation",
     title: "Scroll Animation",
     component: ScrollAnimation,
+  },
+  {
+    path: "/physics",
+    title: "Physics",
+    component: Physics,
   },
 ];
