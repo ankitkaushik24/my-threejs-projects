@@ -1,12 +1,11 @@
+import FlagShaders from "./views/flag-shaders/FlagShaders.vue";
+import GalaxyGenerator from "./views/galaxy-generator/GalaxyGenerator.vue";
 import HauntedHouse from "./views/haunted-house/HauntedHouse.vue";
 import Materials from "./views/materials/Materials.vue";
-import ThreeDText from "./views/three-d-text/ThreeDText.vue";
-import Lights from "./views/lights/Lights.vue";
-import Geometry from "./views/geometry/Geometry.vue";
 import Particles from "./views/particles/Particles.vue";
-import GalaxyGenerator from "./views/galaxy-generator/GalaxyGenerator.vue";
-import ScrollAnimation from "./views/scroll-animation/ScrollAnimation.vue";
 import Physics from "./views/physics/Physics.vue";
+import ScrollAnimation from "./views/scroll-animation/ScrollAnimation.vue";
+import ThreeDText from "./views/three-d-text/ThreeDText.vue";
 
 export default [
   { path: "/", title: "Home", redirect: "/haunted-house" },
@@ -30,5 +29,10 @@ export default [
     path: "/physics",
     title: "Physics",
     component: Physics,
+  },
+  {
+    path: "/flag-shaders",
+    title: "Flag Shaders",
+    component: FlagShaders,
   },
 ];

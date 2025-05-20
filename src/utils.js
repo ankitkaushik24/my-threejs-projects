@@ -23,16 +23,13 @@ export function coreInit(options = {}) {
     canvas: document.querySelector("#webgl"),
   });
 
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(
     75,
     sizes.width / sizes.height,
     0.1,
-    options.cameraFar
+    options.cameraFar,
   );
 
   let orbitControls;
@@ -52,6 +49,8 @@ export function coreInit(options = {}) {
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   };
+
+  onResize();
 
   window.addEventListener("resize", onResize);
 
