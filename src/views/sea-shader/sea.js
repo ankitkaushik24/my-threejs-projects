@@ -10,7 +10,7 @@ export default function init({
   sizes,
   gui,
 }) {
-  camera.position.set(-0.5, 0.5, 1.5);
+  camera.position.set(-0.8, 0.8, 1.6);
 
   const colors = {
     depthColor: "#021b6e",
@@ -26,6 +26,10 @@ export default function init({
     uAmp: { value: 0.12 },
     uSpeed: { value: 0.65 },
     uFreqZ: { value: 5.0 },
+    // Noise parameters
+    uNoiseAmp: { value: 0.15 },
+    uNoiseFreq: { value: 3.0 },
+    uNoiseSpeed: { value: 0.5 },
   };
 
   const planeGeometry = new THREE.PlaneGeometry(3, 3, 512, 512);
@@ -33,10 +37,10 @@ export default function init({
     uniforms,
     vertexShader,
     fragmentShader,
-    // side: THREE.DoubleSide,
+    side: THREE.DoubleSide,
   });
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-  plane.rotation.x -= Math.PI / 2;
+  plane.rotation.x -= Math.PI / 2 - 0.1;
   scene.add(plane);
 
   gui
@@ -59,6 +63,15 @@ export default function init({
   waveFolder.add(uniforms.uAmp, "value", 0.0, 1.0).name("Amplitude");
   waveFolder.add(uniforms.uSpeed, "value", 0.0, 5.0).name("Speed");
   waveFolder.open();
+
+  const noiseFolder = gui.addFolder("Noise");
+  noiseFolder.add(uniforms.uNoiseAmp, "value", 0.0, 1.0).name("Amplitude");
+  noiseFolder
+    .add(uniforms.uNoiseFreq, "value", 0.1, 20.0)
+    .step(1)
+    .name("Frequency");
+  noiseFolder.add(uniforms.uNoiseSpeed, "value", 0.0, 5.0).name("Speed");
+  noiseFolder.open();
 
   let frameId = null;
   const clock = new THREE.Clock();

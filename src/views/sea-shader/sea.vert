@@ -3,6 +3,9 @@ uniform float uFreq;
 uniform float uFreqZ;
 uniform float uAmp;
 uniform float uSpeed;
+uniform float uNoiseAmp;
+uniform float uNoiseFreq;
+uniform float uNoiseSpeed;
 
 varying float vElevation;
 varying vec3 vModelPosition;
@@ -106,7 +109,12 @@ void main() {
 
   for (float i = 1.0; i <= 3.0; i++) {
     elevation -= abs(
-      cnoise(vec3(modelPosition.xz * 3.0 * i, uTime * uSpeed * 0.5)) * 0.15 / i
+      cnoise(
+        vec3(modelPosition.xz * uNoiseFreq * i, uTime * uSpeed * uNoiseSpeed)
+      ) *
+        uNoiseAmp *
+        (1.0 + uAmp) /
+        i
     );
   }
 
