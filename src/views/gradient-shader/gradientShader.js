@@ -18,19 +18,19 @@ export default function init({
     uColor2: { value: new THREE.Color(0.5, 0.0, 0.5) }, // Purple
     uColor3: { value: new THREE.Color(1.0, 0.0, 0.5) },
     uTime: { value: 0.0 },
-    uOffset: { value: 1.0 },
+    uOffset: { value: 2.0 },
   };
 
-  const planeGeometry = new THREE.PlaneGeometry(4, 4, 64, 64);
-  const planeMaterial = new THREE.ShaderMaterial({
+  const sphereGeometry = new THREE.SphereGeometry(1.5, 64, 64);
+  const sphereMaterial = new THREE.ShaderMaterial({
     uniforms,
     vertexShader,
     fragmentShader,
     side: THREE.DoubleSide,
   });
-  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-  scene.add(plane);
+  scene.add(sphere);
 
   // Add GUI controls for colors
   // gui.addColor(uniforms.uColor1, "value").name("Color 1");
@@ -38,7 +38,7 @@ export default function init({
   // gui.addColor(uniforms.uColor3, "value").name("Color 3");
   gui.add(uniforms.uOffset, "value", 0.5, 4, 0.1).name("Offset");
 
-  camera.position.set(0, 0, 3);
+  camera.position.set(0, 0, 1);
 
   const clock = new THREE.Clock();
 
