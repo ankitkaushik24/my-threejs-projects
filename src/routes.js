@@ -35,4 +35,14 @@ export default [
     title: "Flag Shaders",
     component: FlagShaders,
   },
+  {
+    path: "/gradient-shader",
+    title: "Gradient Shader",
+    component: () => import("./views/gradient-shader/GradientShader.vue"),
+  },
+  {
+    path: "/sea",
+    title: "Sea",
+    component: () => import("./views/sea-shader/Sea.vue"),
+  },
 ];

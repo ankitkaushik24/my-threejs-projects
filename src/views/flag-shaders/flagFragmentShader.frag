@@ -8,4 +8,7 @@ void main() {
   texture.rgb += vElevation * 0.5;
 
   gl_FragColor = texture;
+
+  // #include <colorspace_fragment>
+
 }
